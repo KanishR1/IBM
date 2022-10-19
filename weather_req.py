@@ -1,5 +1,4 @@
 import requests as req
-import json
 import os
 os.system("clear")
 
