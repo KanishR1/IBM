@@ -2,7 +2,7 @@ import paho.mqtt.client as mc
 import time
 import random
 
-def publish(client,usr_data,mid):
+def on_publish(client,usr_data,mid):
     print("Published")
 
 client = mc.Client()
@@ -13,7 +13,7 @@ If using MQTT v3.1.1, then a zero length client id will be sent to the broker an
 If using MQTT v3.1 then an id will be randomly generated. 
 In both cases, clean_session must be True. If this is not the case a ValueError will be raised.
 '''
-client.on_publish = publish 
+client.on_publish = on_publish 
 #If implemented, called when a message that was to be sent using the publish() call has completed transmission to the broker.
 
 client.connect('broker.mqttdashboard.com', 1883)
