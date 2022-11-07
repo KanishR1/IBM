@@ -39,17 +39,18 @@ auth_token_l = "Jegadees_001"
 # Datas Needed
 default_speed_limit = 60 # km/hrs
 default_horn = True # Horn can be used
+
 hour_now = str(dt.now()).split()[1].split(":")[0]
 today = str(dt.now().strftime("%A"))
 
 # Location Information
 location_info = {
-     "school" : [ {
-        "school_zone" : rd.choice([True,False]), # Randomize Zones
+     "school" :  {
+        "school_zone" : False, # Randomize Zones
         "active_time" : [7,17] # 7 am - 5 pm
         }
-        ],
-    "hospitals_near_by" : rd.choice([True,False]), # Randomize Zones
+        ,
+    "hospitals_near_by" : False, # Randomize Zones
     "speed_limit" : default_speed_limit,
     "horn" : default_horn
     }
@@ -67,7 +68,7 @@ def get_weather_details():
     temperature_max = weather_data['main']['temp_max']
     temperature_feel = weather_data['main']['feels_like']
     temperature_average = (temperature_max+ temperature_min)/2
-    data = {"climate":climate,"humidity":humidity,"temperature_average":temperature_average}
+    data = {'climate':climate,'humidity':humidity,'temperature_average':temperature_average}
     return data
 
 def myonpublishcallback_w(data):
@@ -85,7 +86,8 @@ def myonpublishcallback_s(speed_horn_data):
 # Speed Limit and Horn Process
 
 def speed_process(climate):
-    if climate == 'Rain':
+    climatee=rd.choice(["Rain","Fog","Mist","Smog","Snow"])
+    if climatee == 'Rain':
         if location_info['hospitals_near_by']:
             location_info['horn'] = False
             location_info['speed_limit'] = 15
@@ -103,7 +105,7 @@ def speed_process(climate):
         else:
             location_info["horn"] = default_horn
             location_info["speed_limit"] = 20
-    elif climate == 'Snow' or climate == 'Smog' or climate == 'Fog':
+    elif climatee == 'Snow' or climate == 'Smog' or climate == 'Fog':
         location_info['speed_limit'] = 10
         if location_info['hospitals_near_by']:
             location_info['horn'] = False
@@ -122,7 +124,6 @@ def speed_process(climate):
         if location_info['hospitals_near_by']:
             location_info['horn'] = False
             location_info['speed_limit'] = 20
-            print(location_info)
         elif location_info['school']['school_zone']:
             if today == "Sunday":
                 location_info['horn'] = default_horn
@@ -137,6 +138,8 @@ def speed_process(climate):
         else:
             location_info['horn'] = default_horn
             location_info['speed_limit'] = default_speed_limit
+
+
         
 
 # Connecting to weather cloud
@@ -170,9 +173,10 @@ deviceCli_s.connect()
 # Processing
 while True:
     data = get_weather_details()
+    speed_process(data['climate'])
     success_w = deviceCli_w.publishEvent("Current Weather","json",data,qos=1,on_publish = myonpublishcallback_w(data))
     horn_data = "Usage of Horn Allowed" if location_info['horn'] else "Do not use the horn frequently"
-    speed_horn_data = {"Hospital Zone":location_info['hospitals_near_by'],"School Zone":location_info['school'][0]['school_zone'],"time_hour":hour_now,"speed":location_info['speed_limit'],"Horn":horn_data}
+    speed_horn_data = {"Hospital Zone":location_info['hospitals_near_by'],"School Zone":location_info['school']['school_zone'],"time_hour":hour_now,"speed":location_info['speed_limit'],"Horn":horn_data}
     success_s = deviceCli_s.publishEvent("Speed Limit","json",speed_horn_data,qos=1,on_publish = myonpublishcallback_s(speed_horn_data))
     if not success_w and not success_s:
         time.sleep(1)
