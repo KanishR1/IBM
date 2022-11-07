@@ -54,6 +54,6 @@ except Exception as e:
 deviceCli.connect()
 while True:
     data = get_weather_details()
-    success = deviceCli.publishEvent("IoTSensor","json",data,qos=1,on_publish = myonpublishcallback(data))
+    success = deviceCli.publishEvent("Current Weather","json",data,qos=1,on_publish = myonpublishcallback(data))
     if not success:
         time.sleep(1)
