@@ -45,4 +45,3 @@
 2022-11-07 14:15:39,310   ibmiotf.device.Client      INFO    Connected successfully: d:nbl97v:weather:weather_id_1
 2022-11-10 08:18:39,568   ibmiotf.device.Client      INFO    Connected successfully: d:nbl97v:weather:weather_id_1
 2022-11-10 08:22:09,769   ibmiotf.device.Client      INFO    Connected successfully: d:nbl97v:weather:weather_id_1
-2022-11-10 08:24:34,957   ibmiotf.device.Client      INFO    Connected successfully: d:nbl97v:weather:weather_id_1
