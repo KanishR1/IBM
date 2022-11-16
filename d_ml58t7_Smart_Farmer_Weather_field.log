@@ -1,0 +1,2 @@
+2022-11-15 22:33:28,514   ibmiotf.device.Client      CRITICAL Not authorized: s (d:ml58t7:Smart_Farmer:Weather_field, use-token-auth, Karan@2001)
+2022-11-15 22:33:58,304   ibmiotf.device.Client      CRITICAL Operation timed out connecting to IBM Watson IoT Platform: ml58t7.messaging.internetofthings.ibmcloud.com

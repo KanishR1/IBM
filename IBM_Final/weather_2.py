@@ -22,19 +22,6 @@ device_id_w = "weather_id_1"
 auth_method_w = "token"
 auth_token_w = "Kanish@2002"
 
-# Cloud Details for speed limit
-org_id_s = "bhan09"
-device_type_s = "Speed"
-device_id_s = "Speed_limit"
-auth_method_s = "token"
-auth_token_s = "Jegadees_001"
-
-# Cloud Details for location info
-org_id_l = "bhan09"
-device_type_l = "Speed"
-device_id_l = "Speed_limit"
-auth_method_l = "token"
-auth_token_l = "Jegadees_001"
 
 # Datas Needed
 default_speed_limit = 60 # km/hrs
@@ -80,7 +67,7 @@ def myonpublishcallback_s(speed_horn_data):
     print(f"Speed limit  = { speed_horn_data['speed'] }")
     print(f"Horn Info = {speed_horn_data['Horn']}")
     print(f"hospital_zone = {speed_horn_data['hospital_zone']}")
-    print(f"School Zone = {speed_horn_data['School Zone']}")
+    print(f"school_zone = {speed_horn_data['school_zone']}")
     print(f"Time Now (in hrs) = {speed_horn_data['time_hour']}")
     print()
 
@@ -158,19 +145,6 @@ except Exception as e:
     sys.exit()
 deviceCli_w.connect()
 
-#connecting to speed limit
-try:
-    deviceOptions_s = {"org" : org_id_s, 
-                     "type" : device_type_s,
-                     "id" : device_id_s,
-                     "auth-method" : auth_method_s,
-                     "auth-token" : auth_token_s
-                    }
-    deviceCli_s = ibmiotf.device.Client(deviceOptions_s)
-except Exception as e:
-    print(f"Caught exception connecting device {str(e)}")
-    sys.exit()
-deviceCli_s.connect()
 
 # Processing
 while True:
@@ -179,13 +153,12 @@ while True:
     climatee=rd.choice(["Rain","Fog","Mist","Smog","Snow"])
     print(climatee)
     data = get_weather_details()
-    #speed_process(data['climate'])
     speed_process(climatee)
-    success_w = deviceCli_w.publishEvent("Current Weather","json",data,qos=1,on_publish = myonpublishcallback_w(data))
     horn_data = "Usage of Horn Allowed" if location_info['horn'] else "Do not use the horn frequently"
-    speed_horn_data = {"hospital_zone":location_info['hospitals_near_by']['hospital_zone'],"School Zone":location_info['school']['school_zone'],"time_hour":hour_now,"speed":location_info['speed_limit'],"Horn":horn_data}
-    success_s = deviceCli_s.publishEvent("Speed Limit","json",speed_horn_data,qos=1,on_publish = myonpublishcallback_s(speed_horn_data))
-    if not success_w and not success_s:
+    speed_horn_data = {"hospital_zone":location_info['hospitals_near_by']['hospital_zone'],"school_zone":location_info['school']['school_zone'],"time_hour":hour_now,"speed":location_info['speed_limit'],"Horn":horn_data}
+    data['Speed_info']=speed_horn_data
+    success_w = deviceCli_w.publishEvent("Current Weather","json",data,qos=1,on_publish = myonpublishcallback_w(data))
+    if not success_w :
         time.sleep(1)
     time.sleep(3)
 
