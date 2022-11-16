@@ -156,7 +156,8 @@ while True:
     speed_process(climatee)
     horn_data = "Usage of Horn Allowed" if location_info['horn'] else "Do not use the horn frequently"
     speed_horn_data = {"hospital_zone":location_info['hospitals_near_by']['hospital_zone'],"school_zone":location_info['school']['school_zone'],"time_hour":hour_now,"speed":location_info['speed_limit'],"Horn":horn_data}
-    data['Speed_info']=speed_horn_data
+    for key in speed_horn_data:
+        data[key] = speed_horn_data[key]
     success_w = deviceCli_w.publishEvent("Current Weather","json",data,qos=1,on_publish = myonpublishcallback_w(data))
     if not success_w :
         time.sleep(1)
